@@ -14,10 +14,16 @@ return new class extends Migration
         Schema::create('reviews', function (Blueprint $table) {
             $table->id();
 
+
+            $table->unsignedBigInteger('book_id');
+
             $table->string('text');
             $table->unsignedTinyInteger('raiting');
 
             $table->timestamps();
+
+            $table->foreign('book_id')->references('id')->on('book')
+                ->onDelete('cascade');
         });
     }
 
