@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -37,8 +38,7 @@ class Book extends Model
 
     public function scopeMinReviews(Builder $query, int $minReviews): Builder
     {
-        return $query->withCount('reviews')
-            ->having('reviews_count', '>=', $minReviews);
+        return $query->having('reviews_count', '>=', $minReviews);
     }
 
     private function dateRangeFilter(Builder $query, $from = null, $to = null)
@@ -51,7 +51,7 @@ class Book extends Model
             $query->whereBetween('created_at', [$from, $to]);
     }
 
-    public function scopePopularLastMonth(Builder $query): Builder
+    public function scopePopularLastMonth(Builder $query): Builder|QueryBuilder
     {
         return $query->popular(now()->subMonth(), now())
             ->highestRated(now()->subMonth(), now())
@@ -61,7 +61,7 @@ class Book extends Model
     public function scopePopularLast6Months(Builder $query): Builder
     {
         return $query->popular(now()->subMonths(6), now())
-            ->highestRated(now()->subMonthss(6), now())
+            ->highestRated(now()->subMonths(6), now())
             ->minReviews(5);
     }
 
