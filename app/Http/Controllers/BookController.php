@@ -20,15 +20,15 @@ class BookController extends Controller
             fn($query, $title) => $query->title($title)
         );
 
-        // $books = match ($filter) {
-        //     'popular_last_month' => $books->popularLastMonth(),
-        //     'popular_last_6months' => $books->popularLast6Months(),
-        //     'highest_rated_last_month' => $books->highestRatedLastMonth(),
-        //     'highest_rated_last_6months' => $books->highestRatedLast6Months(),
-        //     default => $books->latest()
-        // };
+        $books = match ($filter) {
+            'popular_last_month' => $books->popularLastMonth(),
+            'popular_last_6months' => $books->popularLast6Months(),
+            'highest_rated_last_month' => $books->highestRatedLastMonth(),
+            'highest_rated_last_6months' => $books->highestRatedLast6Months(),
+            default => $books->latest()
+        };
 
-        $books->get();
+        $books = $books->get();
 
         return view("books.index", ['books' => $books]);
     }
@@ -51,17 +51,7 @@ class BookController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Book $book)
-    {
-        return view(
-            'books.show',
-            [
-                'book' => $book->load([
-                    'reviews' => fn($query) => $query->latest()
-                ])
-            ]
-        );
-    }
+    public function show(string $id) {}
 
     /**
      * Show the form for editing the specified resource.
