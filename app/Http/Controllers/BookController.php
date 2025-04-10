@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use App\Models\Book;
 
 class BookController extends Controller
@@ -12,7 +13,7 @@ class BookController extends Controller
      */
     public function index(Request $request)
     {
-        $title =   $request->input("title");
+        $title = $request->input("title");
         $filter = $request->input('filter', '');
 
         $books = Book::when(
@@ -28,7 +29,12 @@ class BookController extends Controller
             default => $books->latest()
         };
 
-        $books = $books->get();
+
+
+        $cacheKey = 'books:' . $filter . ':' . $title;
+        $books = cache()->remember($cacheKey, 3600, fn() => $books->get());
+
+
 
         return view("books.index", ['books' => $books]);
     }

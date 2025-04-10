@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+<div>
+    <a href="{{ route('books.index') }}">Main Page</a>
+</div>
+
 @section('content')
     <div class="mb-4">
         <h1 class="mb-2 text-2xl">{{ $book->title }}</h1>
